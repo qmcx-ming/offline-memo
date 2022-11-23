@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>离线备忘录</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div></div>
+            <div class="title">小明同学🎆备忘录</div>
+            <div class="clear-all" id="clear-all">
+                <img src="./imgs/delete_all.png" alt="删除小图标-桶" class="delete-all-icon">
+                <p>清空</p>
+            </div>
+        </header>
+        <nav class="prompt">
+            <p id="date-time">📅2022/11/10</p>
+            <p>今日天气：☀️☀️☀️</p>
+            <p id="matter-count">代办事项( 0 )</p>
+        </nav>
+        <div class="main-content">
+            <ul id="main-inner">
+                <div class="empty-box" id="empty-box">
+                    <img src="./imgs/empty.png" alt="空空如也" class="empty-icon">
+                    <p>---空空如也---</p>
+                </div>
+
+            </ul>
+        </div>
+        <footer class="footer">
+            <input placeholder="今天想做点什么~~~" type="text" class="input" required="" id="input">
+            <button id="add-btn" value="0">
+                <span class="shadow"></span>
+                <span class="edge"></span>
+                <span class="front text">添加
+                </span>
+            </button>
+        </footer>
+    </div>
+</body>
+<script>
+    var inputDom, addBtnDom, matterDom, mainInnerDom, emptyBoxDom, clearAll, matterCount, dateTimeDom;
+    var MATTER = 'matter';
+
+    /**
+     * 获取dom节点
+    */
+    function getDomElement() {
+        inputDom = document.getElementById('input');
+        addBtnDom = document.getElementById('add-btn');
+        matterDom = document.getElementById('matter');
+        mainInnerDom = document.getElementById('main-inner');
+        emptyBoxDom = document.getElementById('empty-box');
+        clearAll = document.getElementById('clear-all');
+        matterCount = document.getElementById('matter-count');//代办事项数量
+        dateTimeDom = document.getElementById('date-time');
+    }
+
+    /**
+     * 创建节点li
+    */
+    function createLi(matter) {
+        var li = document.createElement('li');
+        var p = document.createElement('p');
+        var img = document.createElement('img');
+        li.append(p);
+        li.append(img);
+        p.append(matter);
+        img.setAttribute('src', './imgs/delete.png');//为节点设置属性-src
+        img.setAttribute('class', 'delete-single-icon');//为节点设置属性-class
+
+        img.setAttribute('index', matter);//设置标记
+        mainInnerDom.append(li);
+    }
+
+    /**
+     * 显示当日时间功能
+    */
+    function dateTime() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        dateTimeDom.innerText = `📅${year}/${month}/${day}`;
+    }
+
+    /**
+     * 清空功能
+    */
+    function clearAllStorage() {
+        localStorage.clear();
+        let li = document.querySelectorAll('li');
+        for (let i = 0; i < li.length; i++) {
+            li[i].remove();
+        }
+        emptyBoxDom.style.display = 'block';
+        matterCount.innerText = `代办事项( 0 )`;
+    }
+
+    /**
+     * 删除单条代办功能
+    */
+    function deleteSingle(arr) {
+        let delIcon = document.querySelectorAll('.delete-single-icon');
+        let li = document.querySelectorAll('li');
+
+        for (let i = 0; i < delIcon.length; i++) {//删除节点
+            delIcon[i].onclick = function () {
+                li[i].remove();
+
+                let index = delIcon[i].getAttribute('index');
+                for(let idx = 0; idx < arr.length; idx++) {//遍历，比对
+                    if(index == arr[idx]) {
+                        arr.splice(idx,1);
+                        break;
+                    }
+                }
+
+                var arrJSON = JSON.stringify(arr);
+                //console.log(i, arr);
+                localStorage.setItem(MATTER, arrJSON);
+                matterCount.innerText = `代办事项( ${arr.length} )`;
+
+                if (arr.length == 0) {//空了，直接把缓存清掉
+                    clearAllStorage();
+                }
+            }
+        }
+        if (arr.length == 0) {//空了，直接把缓存清掉
+            clearAllStorage();
+        }
+    }
+
+    /**
+     * 添加代办功能
+    */
+    function addMatter(arr) {
+        addBtnDom.onclick = function () {
+            var inputValue = inputDom.value;
+            createLi(inputValue);
+
+            if (JSON.parse(localStorage.getItem(MATTER)) == null) {//确保单个删除代办后，继续添加，本地缓存中不会出现之前删除的数据(代办)
+                arr = [];
+            }
+            arr.push(inputValue);
+            var arrJSON = JSON.stringify(arr);
+            localStorage.setItem(MATTER, arrJSON);
+            emptyBoxDom.style.display = 'none';
+            matterCount.innerText = `代办事项( ${arr.length} )`;
+            //点击'添加'后，输入框置空
+            inputDom.value = '';
+
+            deleteSingle(JSON.parse(localStorage.getItem(MATTER)));//在添加功能下，还能进行删除单个代办
+        }
+        return arr;
+    }
+
+    window.onload = function () {
+        getDomElement();
+        var arr = [];//一个‘任劳任怨’的数组
+        arr = addMatter(arr);
+
+        arr = JSON.parse(localStorage.getItem(MATTER));
+        if (arr == null) {//本地缓存无数据 → 空空如也
+            emptyBoxDom.style.display = 'block';
+        } else {//有数据 → 渲染出来
+            emptyBoxDom.style.display = 'none';
+            for (let i = 0; i < arr.length; i++) {//遍历localStorage
+                createLi(arr[i]);
+            }
+            arr = addMatter(arr);//保证每次刷新，还能在原有数据的基础之上更改，而不会被覆盖
+            matterCount.innerText = `代办事项( ${arr.length} )`;
+            deleteSingle(arr);
+        }
+        clearAll.onclick = function () {//清空
+            clearAllStorage();
+        }
+        dateTime();
+    }
+</script>
+
+</html>
