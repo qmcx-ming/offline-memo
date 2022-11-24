@@ -14,7 +14,7 @@
         <header class="header">
             <div></div>
             <div class="title">小明同学🎆备忘录</div>
-            <div class="clear-all" id="clear-all">
+            <div class="clear-all" id="clear-all" onclick="clearAllStorage()">
                 <img src="./imgs/delete_all.png" alt="删除小图标-桶" class="delete-all-icon">
                 <p>清空</p>
             </div>
@@ -47,6 +47,8 @@
 <script>
     var inputDom, addBtnDom, matterDom, mainInnerDom, emptyBoxDom, clearAll, matterCount, dateTimeDom;
     var MATTER = 'matter';
+
+    var arr = [];//一个‘任劳任怨’的数组
 
     /**
      * 获取dom节点
@@ -106,7 +108,7 @@
     /**
      * 删除单条代办功能
     */
-    function deleteSingle(arr) {
+    function deleteSingle() {
         let delIcon = document.querySelectorAll('.delete-single-icon');
         let li = document.querySelectorAll('li');
 
@@ -115,9 +117,9 @@
                 li[i].remove();
 
                 let index = delIcon[i].getAttribute('index');
-                for(let idx = 0; idx < arr.length; idx++) {//遍历，比对
-                    if(index == arr[idx]) {
-                        arr.splice(idx,1);
+                for (let idx = 0; idx < arr.length; idx++) {//遍历，比对
+                    if (index == arr[idx]) {
+                        arr.splice(idx, 1);
                         break;
                     }
                 }
@@ -140,7 +142,7 @@
     /**
      * 添加代办功能
     */
-    function addMatter(arr) {
+    function addMatter() {
         addBtnDom.onclick = function () {
             var inputValue = inputDom.value;
             createLi(inputValue);
@@ -156,16 +158,15 @@
             //点击'添加'后，输入框置空
             inputDom.value = '';
 
-            deleteSingle(JSON.parse(localStorage.getItem(MATTER)));//在添加功能下，还能进行删除单个代办
+            deleteSingle();//在添加功能下，还能进行删除单个代办
         }
         return arr;
     }
 
-    window.onload = function () {
-        getDomElement();
-        var arr = [];//一个‘任劳任怨’的数组
-        arr = addMatter(arr);
-
+    /**
+     * 渲染数据
+    */
+    function rendering() {
         arr = JSON.parse(localStorage.getItem(MATTER));
         if (arr == null) {//本地缓存无数据 → 空空如也
             emptyBoxDom.style.display = 'block';
@@ -176,11 +177,15 @@
             }
             arr = addMatter(arr);//保证每次刷新，还能在原有数据的基础之上更改，而不会被覆盖
             matterCount.innerText = `代办事项( ${arr.length} )`;
-            deleteSingle(arr);
+            deleteSingle();
         }
-        clearAll.onclick = function () {//清空
-            clearAllStorage();
-        }
+    }
+
+    window.onload = function () {
+        getDomElement();
+        rendering();
+        addMatter();
+        clearAllStorage();
         dateTime();
     }
 </script>
