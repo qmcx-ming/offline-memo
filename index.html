@@ -175,7 +175,7 @@
             for (let i = 0; i < arr.length; i++) {//遍历localStorage
                 createLi(arr[i]);
             }
-            arr = addMatter(arr);//保证每次刷新，还能在原有数据的基础之上更改，而不会被覆盖
+            arr = addMatter();//保证每次刷新，还能在原有数据的基础之上更改，而不会被覆盖
             matterCount.innerText = `代办事项( ${arr.length} )`;
             deleteSingle();
         }
@@ -185,7 +185,6 @@
         getDomElement();
         rendering();
         addMatter();
-        clearAllStorage();
         dateTime();
     }
 </script>
