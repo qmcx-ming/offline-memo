@@ -8,38 +8,46 @@
 body {
     width: 100vw;
     height: 100vh;
+    background: url(../imgs/bg.jpg) no-repeat;
+    background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.br10 {
+    border-radius: 10px;
 }
 
 /* 主体容器 */
 .container {
     width: 800px;
     height: 500px;
-    background-color: #DCE2F1;
-    border-radius: 10px;
+    /* background-color: #DCE2F1; */
+    background-color: rgba(220, 226, 241, 0.5);
 }
 
 /* 顶部区域 */
 .container>.header {
     height: 40px;
-    /* background-color: red; */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .title {
     /* color: #fff; */
     font-size: 20px;
     font-style: italic;
+    font-weight: bold;
 }
 
+/* 清空样式 */
 .clear-all {
     width: 35px;
     height: 35px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -71,16 +79,21 @@ body {
 /* 提示区域 */
 .prompt {
     height: 25px;
-    background-color: #FAF9DE;
+    /* background-color: #FAF9DE; */
+    background-color: #ffffff;
     display: flex;
     align-items: center;
     font-size: 10px;
+    padding: 2px;
+    border-radius: 5px;
 }
 
 .prompt>p {
-    width: 115px;
+    /* width: 115px; */
+    padding: 1px 5px;
     height: 20px;
-    background-color: #E3EDCD;
+    /* background-color: #E3EDCD; */
+    background-color: #CFD0D4;
     border-radius: 5px;
     text-align: center;
     line-height: 20px;
@@ -90,7 +103,7 @@ body {
 /* 主体区域 */
 .main-content {
     height: 320px;
-    background-color: #EAEAEF;
+    /* background-color: #EAEAEF; */
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -99,9 +112,9 @@ body {
 .main-content ul {
     width: 600px;
     height: 300px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 5px;
-    box-shadow: 4px 4px 4px #888;
+    box-shadow: 0px 10px 10px -3px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -111,10 +124,10 @@ body {
 .main-content ul li {
     margin-top: 10px;
     width: 500px;
-    height: 40px;
-    background-color: #EAEAEF;
+    min-height: 40px;
+    background-color: rgb(234, 234, 239, 0.8);
     border-radius: 10px;
-    box-shadow: 4px 4px 4px #888;
+    box-shadow: 0px 10px 80px -3px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,8 +162,7 @@ body {
 /* 底部区域 */
 .footer {
     height: 115px;
-    /* background-color:coral; */
-    background-color: #EAEAEF;
+    /* background-color: #EAEAEF; */
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -265,4 +277,20 @@ button:active .shadow {
 
 button:focus:not(:focus-visible) {
     outline: none;
+}
+
+/* 移动端适配 */
+/* <= 750 */
+@media screen and (max-width: 750px) {
+    .container,.main-content {
+        width: 100%;
+    }
+
+    .main-content ul {
+        width: 90%;
+    }
+
+    .main-content ul li {
+        width: 80%;
+    }
 }

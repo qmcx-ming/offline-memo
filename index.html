@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>离线备忘录</title>
+    <title>简易离线备忘录</title>
     <link rel="stylesheet" href="./css/index.css">
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
+    <div class="container br10">
+        <header class="header br10">
             <div></div>
             <div class="title">小明同学🎆备忘录</div>
             <div class="clear-all" id="clear-all" onclick="clearAllStorage()">
@@ -21,8 +21,8 @@
         </header>
         <nav class="prompt">
             <p id="date-time">📅2022/11/10</p>
-            <p>今日天气：☀️☀️☀️</p>
-            <p id="matter-count">代办事项( 0 )</p>
+            <p>🖼️今日天气：☀️☀️☀️</p>
+            <p id="matter-count">🎰代办事项( 0 )</p>
         </nav>
         <div class="main-content">
             <ul id="main-inner">
@@ -33,7 +33,7 @@
 
             </ul>
         </div>
-        <footer class="footer">
+        <footer class="footer br10">
             <input placeholder="今天想做点什么~~~" type="text" class="input" required="" id="input">
             <button id="add-btn" value="0">
                 <span class="shadow"></span>
@@ -145,6 +145,10 @@
     function addMatter() {
         addBtnDom.onclick = function () {
             var inputValue = inputDom.value;
+            if (inputValue == '') {
+                alert('请输入代办✨');
+                return;
+            }
             createLi(inputValue);
 
             if (JSON.parse(localStorage.getItem(MATTER)) == null) {//确保单个删除代办后，继续添加，本地缓存中不会出现之前删除的数据(代办)
